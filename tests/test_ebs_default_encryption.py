@@ -3,14 +3,13 @@
 #   http://aws.amazon.com/agreement or other written agreement between Customer and either
 #   Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
-import logging
-import os
+import boto3
 
-# Disable extra logging for tests
-logging.getLogger("boto").setLevel(logging.CRITICAL)
-logging.getLogger("boto3").setLevel(logging.CRITICAL)
-logging.getLogger("botocore").setLevel(logging.CRITICAL)
+def test_ebs_encryption_by_default():
 
+    client = boto3.client("ec2", region_name = "eu-west-2")
 
-# NETWORK_ACCOUNT_ID = "441363678600"
-ASSUME_ROLE_NAME = "AWSControlTowerExecution"
+    isEbsEncryption = client.get_ebs_encryption_by_default()
+    
+    # Check that ebs encryption is true
+    assert isEbsEncryption["EbsEncryptionByDefault"] == True

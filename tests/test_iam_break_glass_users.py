@@ -3,14 +3,15 @@
 #   http://aws.amazon.com/agreement or other written agreement between Customer and either
 #   Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
-import logging
-import os
+import boto3
+from botocore.exceptions import ClientError
 
-# Disable extra logging for tests
-logging.getLogger("boto").setLevel(logging.CRITICAL)
-logging.getLogger("boto3").setLevel(logging.CRITICAL)
-logging.getLogger("botocore").setLevel(logging.CRITICAL)
+def test_break_glass_users():
 
+    iam=boto3.client("iam", region_name = "eu-west-1")
 
-# NETWORK_ACCOUNT_ID = "441363678600"
-ASSUME_ROLE_NAME = "AWSControlTowerExecution"
+    users = iam.list_users()["Users"]
+
+    assert len(users) > 0
+    assert any(i['UserName'] == 'breakGlassUser01' for i in users)
+    assert any(i['UserName'] == 'breakGlassUser02' for i in users)

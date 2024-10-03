@@ -3,14 +3,11 @@
 #   http://aws.amazon.com/agreement or other written agreement between Customer and either
 #   Amazon Web Services, Inc. or Amazon Web Services EMEA SARL or both.
 
-import logging
-import os
+import tests.utils.utils as utils
+import tests.utils.common as common
 
-# Disable extra logging for tests
-logging.getLogger("boto").setLevel(logging.CRITICAL)
-logging.getLogger("boto3").setLevel(logging.CRITICAL)
-logging.getLogger("botocore").setLevel(logging.CRITICAL)
+def test_ot_vpn_connection():
+    common.test_vpn_connection('Accelerator-Vpn-OT-Dublin', 'available', 'UP');
 
-
-# NETWORK_ACCOUNT_ID = "441363678600"
-ASSUME_ROLE_NAME = "AWSControlTowerExecution"
+def test_ot_customer_gateway():
+    common.test_customer_gateway('Accelerator-Cgw-OT-Dublin', 'available', '89.37.69.118')
