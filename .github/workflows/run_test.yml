@@ -2,6 +2,12 @@ name: Run Unit Test via Pytest
 
 on: [push]
 
+env:
+  NETWORK_ACCOUNT_ID: "191492679615"
+  AUDIT_ACCOUNT_ID: "635908288223"
+  LA_ACCOUNT_ID: "654573315011"
+  ASSUME_ROLE_NAME: "AWSControlTowerExecution"
+
 jobs:
   build:
     runs-on: ubuntu-latest
