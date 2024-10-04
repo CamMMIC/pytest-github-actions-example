@@ -86,6 +86,12 @@ jobs:
       - name: Test with pytest
         run: |
           python -m pytest --junitxml=test-reports/junit.xml
+      
+      - name: Archive test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test-reports/junit.xml
 
 
       
