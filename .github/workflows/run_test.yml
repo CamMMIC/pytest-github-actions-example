@@ -1,8 +1,38 @@
 name: Run Unit Test via Pytest
 
-on: [push]
+on:
+  workflow_dispatch:
+    inputs:
+      AWS_ACCESS_KEY_ID:
+        description: AWS_ACCESS_KEY_ID
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: AWS_SECRET_ACCESS_KEY
+        required: true
+      AWS_REGION:
+        type: choice
+        description: AWS_REGION
+        required: false
+        default: eu-west-1
+        options:
+          - eu-west-1
+          - eu-west-2
+          - us-east-1
+      STAGE:
+        type: choice
+        description: STAGE
+        required: false
+        default: prod
+        options:
+          - dev
+          - test
+          - prod
 
 env:
+  AWS_ACCESS_KEY_ID: ${{ github.event.inputs.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ github.event.inputs.AWS_REGION }}
+  AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
   NETWORK_ACCOUNT_ID: "191492679615"
   AUDIT_ACCOUNT_ID: "635908288223"
   LA_ACCOUNT_ID: "654573315011"
@@ -16,11 +46,25 @@ jobs:
         python-version: ["3.10"]
 
     steps:
+      - name: assume-role
+        uses: aws-actions/configure-aws-credentials@v4.0.2
+        with:
+          aws-access-key-id: ${{ github.event.inputs.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ github.event.inputs.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ github.event.inputs.AWS_REGION }}
+          role-session-name: gh-deployment
+          role-duration-seconds: 1200
+
+      - name: get-caller-identity
+        run: |
+          aws sts get-caller-identity
       - uses: actions/checkout@v3
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           pwd
