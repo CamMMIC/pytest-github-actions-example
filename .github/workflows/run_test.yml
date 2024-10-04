@@ -10,7 +10,7 @@ on:
         description: AWS_SECRET_ACCESS_KEY
         required: true
       AWS_SESSION_TOKEN:
-        description: AWS_SECRET_ACCESS_KEY
+        description: AWS_SESSION_TOKEN
         required: true
       AWS_REGION:
         type: choice
@@ -80,13 +80,12 @@ jobs:
           ls
           python -m pip install --upgrade pip
           pip install -r tests/requirements.txt
+          mkdir test-reports
     
         continue-on-error: true
       - name: Test with pytest
         run: |
-          python -m pytest
-      - name: Generate Coverage Report
-        run: |
-          coverage report -m
+          python -m pytest --junitxml=test-reports/junit.xml
+
 
       
